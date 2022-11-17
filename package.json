@@ -1,12 +1,27 @@
 {
   "name": "clean-ts-upload",
   "version": "0.0.1",
-  "description": "",
+  "description": "API for uploading files using TypeScript, Clean Architecture, TDD and DDD",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/main/server.js",
+    "build": "rimraf dist && tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": {
+    "name": "Alexandre Oliveira",
+    "email": "alexandrevoliveira30@gmail.com",
+    "url": "https://www.linkedin.com/in/alexandrevoliveira/"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2",
+    "rimraf": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/module-alias": "^2.0.1",
+    "@types/node": "^18.11.9",
+    "typescript": "^4.9.3"
+  },
+  "engines": {
+    "node": "16.x"
+  }
 }

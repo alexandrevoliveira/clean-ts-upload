@@ -1,3 +1,4 @@
+import { UploadError } from '@/domain/entities/errors'
 import { UploadFile } from '@/domain/contracts/gateways'
 import { setupUploadLocalFile, UploadLocalFile } from '@/domain/usecases'
 
@@ -7,6 +8,7 @@ describe('UploadLocalFile', () => {
   let buffer: Buffer
   let mimeType: string
   let fileName: string
+  let file: { buffer: Buffer, mimeType: string, fileName: string }
   let fileStorage: MockProxy<UploadFile>
   let sut: UploadLocalFile
 
@@ -14,7 +16,9 @@ describe('UploadLocalFile', () => {
     buffer = Buffer.from('any_buffer')
     mimeType = 'application/gzip'
     fileName = 'any_file_name'
+    file = { buffer, mimeType, fileName }
     fileStorage = mock()
+    fileStorage.upload.mockResolvedValue(undefined)
   })
 
   beforeEach(() => {
@@ -25,5 +29,13 @@ describe('UploadLocalFile', () => {
     await sut({ file: { buffer, mimeType, fileName } })
 
     expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName })
+  })
+
+  it('should throw UploadError when UploadFile returns any Error', async () => {
+    fileStorage.upload.mockResolvedValueOnce(new Error('any_upload_error'))
+
+    const promise = sut({ file: { buffer, mimeType, fileName } })
+
+    await expect(promise).rejects.toThrow(new UploadError(file.fileName))
   })
 })

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/main/server.js",
-    "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix"
   },
   "author": {
     "name": "Alexandre Oliveira",
@@ -19,6 +21,12 @@
   "devDependencies": {
     "@types/module-alias": "^2.0.1",
     "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "eslint": "^8.27.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
     "typescript": "^4.9.3"
   },
   "engines": {

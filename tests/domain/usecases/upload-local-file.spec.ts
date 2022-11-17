@@ -28,7 +28,7 @@ describe('UploadLocalFile', () => {
   it('should call UploadFile with correct input', async () => {
     await sut({ file: { buffer, mimeType, fileName } })
 
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName })
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName: `${fileName}.${mimeType.split('/')[1]}` })
   })
 
   it('should throw UploadError when UploadFile returns any Error', async () => {

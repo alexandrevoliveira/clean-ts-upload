@@ -2,7 +2,7 @@
   "name": "clean-ts-upload",
   "version": "0.0.1",
   "description": "API for uploading files using TypeScript, Clean Architecture, TDD and DDD",
-  "main": "index.js",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "start": "node src/main/server.js",
     "build": "rimraf dist && tsc -p tsconfig-build.json",

@@ -38,4 +38,10 @@ describe('UploadLocalFile', () => {
 
     await expect(promise).rejects.toThrow(new UploadError(file.fileName))
   })
+
+  it('should return correct data when UploadFile returns undefined', async () => {
+    const result = await sut({ file: { buffer, mimeType, fileName } })
+
+    expect(result).toEqual({ fileName: file.fileName })
+  })
 })

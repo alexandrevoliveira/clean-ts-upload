@@ -1,5 +1,5 @@
 import { UploadError } from '@/domain/entities/errors'
-import { UploadFile } from '@/domain/contracts/gateways'
+import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
 import { setupUploadLocalFile, UploadLocalFile } from '@/domain/usecases'
 
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -9,6 +9,7 @@ describe('UploadLocalFile', () => {
   let mimeType: string
   let fileName: string
   let file: { buffer: Buffer, mimeType: string, fileName: string }
+  let crypto: MockProxy<UUIDGenerator>
   let fileStorage: MockProxy<UploadFile>
   let sut: UploadLocalFile
 
@@ -17,12 +18,19 @@ describe('UploadLocalFile', () => {
     mimeType = 'application/gzip'
     fileName = 'any_file_name'
     file = { buffer, mimeType, fileName }
+    crypto = mock()
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue(undefined)
   })
 
   beforeEach(() => {
-    sut = setupUploadLocalFile(fileStorage)
+    sut = setupUploadLocalFile(fileStorage, crypto)
+  })
+
+  it('should call UUIDGenerator with correct input', async () => {
+    await sut({ file: { buffer, mimeType, fileName } })
+
+    expect(crypto.uuid).toHaveBeenCalledWith({ key: fileName })
   })
 
   it('should call UploadFile with correct input', async () => {

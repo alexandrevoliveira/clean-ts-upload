@@ -7,8 +7,9 @@ type Output = { fileName: string }
 export type UploadLocalFile = (input: Input) => Promise<Output>
 
 export const setupUploadLocalFile: Setup = (fileStorage, crypto) => async ({ file }) => {
-  crypto.uuid({ key: file.fileName })
-  const uploadResponse = await fileStorage.upload({ file: file.buffer, fileName: `${file.fileName}.${file.mimeType.split('/')[1]}` })
+  const uniqueKey = crypto.uuid({ key: file.fileName })
+  const uniqueFileName = `${uniqueKey}.${file.mimeType.split('/')[1]}`
+  const uploadResponse = await fileStorage.upload({ file: file.buffer, fileName: uniqueFileName })
   if (uploadResponse instanceof Error) throw new UploadError()
-  return { fileName: file.fileName }
+  return { fileName: uniqueFileName }
 }

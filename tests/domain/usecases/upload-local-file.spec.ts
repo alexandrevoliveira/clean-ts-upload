@@ -9,6 +9,8 @@ describe('UploadLocalFile', () => {
   let mimeType: string
   let fileName: string
   let file: { buffer: Buffer, mimeType: string, fileName: string }
+  let uuid: string
+  let uniqueFileName: string
   let crypto: MockProxy<UUIDGenerator>
   let fileStorage: MockProxy<UploadFile>
   let sut: UploadLocalFile
@@ -18,7 +20,10 @@ describe('UploadLocalFile', () => {
     mimeType = 'application/gzip'
     fileName = 'any_file_name'
     file = { buffer, mimeType, fileName }
+    uuid = 'any_unique_id'
+    uniqueFileName = `${uuid}.${mimeType.split('/')[1]}`
     crypto = mock()
+    crypto.uuid.mockReturnValue(uuid)
     fileStorage = mock()
     fileStorage.upload.mockResolvedValue(undefined)
   })
@@ -30,13 +35,13 @@ describe('UploadLocalFile', () => {
   it('should call UUIDGenerator with correct input', async () => {
     await sut({ file: { buffer, mimeType, fileName } })
 
-    expect(crypto.uuid).toHaveBeenCalledWith({ key: fileName })
+    expect(crypto.uuid).toHaveBeenCalledWith({ key: file.fileName })
   })
 
   it('should call UploadFile with correct input', async () => {
     await sut({ file: { buffer, mimeType, fileName } })
 
-    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName: `${fileName}.${mimeType.split('/')[1]}` })
+    expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName: uniqueFileName })
   })
 
   it('should throw UploadError when UploadFile returns any Error', async () => {
@@ -50,6 +55,6 @@ describe('UploadLocalFile', () => {
   it('should return correct data when UploadFile returns undefined', async () => {
     const result = await sut({ file: { buffer, mimeType, fileName } })
 
-    expect(result).toEqual({ fileName: file.fileName })
+    expect(result).toEqual({ fileName: uniqueFileName })
   })
 })

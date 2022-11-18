@@ -40,11 +40,11 @@ describe('UploadLocalFile', () => {
   })
 
   it('should throw UploadError when UploadFile returns any Error', async () => {
-    fileStorage.upload.mockResolvedValueOnce(new Error('any_upload_error'))
+    fileStorage.upload.mockResolvedValueOnce(new UploadError())
 
     const promise = sut({ file: { buffer, mimeType, fileName } })
 
-    await expect(promise).rejects.toThrow(new UploadError(file.fileName))
+    await expect(promise).rejects.toThrow(new UploadError())
   })
 
   it('should return correct data when UploadFile returns undefined', async () => {

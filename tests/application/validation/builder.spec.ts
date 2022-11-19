@@ -14,4 +14,12 @@ describe('ValidationBuilder', () => {
 
     expect(validators).toEqual([new RequiredBuffer(buffer)])
   })
+
+  it('should return Required and RequiredBuffer', () => {
+    const buffer = Buffer.from('any_buffer')
+
+    const validators = ValidationBuilder.of({ value: { buffer } }).required().build()
+
+    expect(validators).toEqual([new Required({ buffer }), new RequiredBuffer(buffer)])
+  })
 })

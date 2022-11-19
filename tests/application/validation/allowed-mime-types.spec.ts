@@ -9,4 +9,12 @@ describe('AllowedMimeTypes', () => {
 
     expect(error).toEqual(new InvalidMimeTypeError(['gz']))
   })
+
+  it('should return undefined if value is valid', () => {
+    const sut = new AllowedMimeTypes(['gz'], 'application/gzip')
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
 })

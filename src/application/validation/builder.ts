@@ -1,4 +1,4 @@
-import { Required, Validator } from '@/application/validation'
+import { Required, RequiredBuffer, Validator } from '@/application/validation'
 
 export class ValidationBuilder {
   constructor (
@@ -12,7 +12,11 @@ export class ValidationBuilder {
   }
 
   required (): ValidationBuilder {
-    this.validators.push(new Required(this.value, this.fieldName))
+    if (this.value instanceof Buffer) {
+      this.validators.push(new RequiredBuffer(this.value))
+    } else {
+      this.validators.push(new Required(this.value, this.fieldName))
+    }
     return this
   }
 

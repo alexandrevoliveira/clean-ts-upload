@@ -33,4 +33,12 @@ describe('RequiredBuffer', () => {
 
     expect(sut).toBeInstanceOf(Required)
   })
+
+  it('should return RequiredFieldError if value is empty', () => {
+    const sut = new RequiredBuffer(Buffer.from(''))
+
+    const error = sut.validate()
+
+    expect(error).toEqual(new RequiredFieldError())
+  })
 })

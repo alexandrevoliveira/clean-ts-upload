@@ -4,3 +4,13 @@ export class InvalidMimeTypeError extends Error {
     this.name = 'InvalidMimeTypeError'
   }
 }
+
+export class RequiredFieldError extends Error {
+  constructor (fieldName?: string) {
+    const message = fieldName !== undefined
+      ? `The field ${fieldName} is required`
+      : 'Field required'
+    super(message)
+    this.name = 'RequiredFieldError'
+  }
+}

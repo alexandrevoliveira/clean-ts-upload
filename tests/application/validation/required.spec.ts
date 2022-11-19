@@ -1,5 +1,5 @@
 import { RequiredFieldError } from '@/application/errors'
-import { Required } from '@/application/validation'
+import { Required, RequiredBuffer } from '@/application/validation'
 
 describe('Required', () => {
   it('should return RequiredFieldError if value is null', () => {
@@ -24,5 +24,13 @@ describe('Required', () => {
     const error = sut.validate()
 
     expect(error).toBeUndefined()
+  })
+})
+
+describe('RequiredBuffer', () => {
+  it('should extend Required', () => {
+    const sut = new RequiredBuffer(Buffer.from(''))
+
+    expect(sut).toBeInstanceOf(Required)
   })
 })

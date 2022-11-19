@@ -13,6 +13,7 @@ describe('LocalSystemFileStorage', () => {
 
   beforeAll(async () => {
     const execAsync = promisify(exec)
+    await execAsync('mkdir -p $(pwd)/src/tmp')
     await execAsync('node -e "process.stdout.write(crypto.randomBytes(1e7))" > $(pwd)/src/tmp/a.gz')
     path = join(__dirname, '../../../src/tmp')
     buffer = Buffer.from(`${path}/a.gz`)

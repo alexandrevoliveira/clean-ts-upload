@@ -21,6 +21,6 @@ export class RequiredBuffer extends Required {
   }
 
   override validate (): Error | undefined {
-    if (super.validate() !== undefined) return new RequiredFieldError(this.fieldName)
+    if (super.validate() !== undefined || this.value.length === 0) return new RequiredFieldError(this.fieldName)
   }
 }

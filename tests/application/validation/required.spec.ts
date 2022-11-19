@@ -41,4 +41,12 @@ describe('RequiredBuffer', () => {
 
     expect(error).toEqual(new RequiredFieldError())
   })
+
+  it('should return undefined if value is not empty', () => {
+    const sut = new RequiredBuffer(Buffer.from('any_buffer'))
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
 })

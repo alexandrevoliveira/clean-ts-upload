@@ -17,4 +17,12 @@ describe('Required', () => {
 
     expect(error).toEqual(new RequiredFieldError('any_field'))
   })
+
+  it('should return undefined if value is not empty', () => {
+    const sut = new Required('any_value', 'any_field')
+
+    const error = sut.validate()
+
+    expect(error).toBeUndefined()
+  })
 })

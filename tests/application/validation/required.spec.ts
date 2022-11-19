@@ -1,0 +1,12 @@
+import { RequiredFieldError } from '@/application/errors'
+import { Required } from '@/application/validation'
+
+describe('Required', () => {
+  it('should return RequiredFieldError if value is null', () => {
+    const sut = new Required(null as any, 'any_field')
+
+    const error = sut.validate()
+
+    expect(error).toEqual(new RequiredFieldError('any_field'))
+  })
+})

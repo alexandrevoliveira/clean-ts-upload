@@ -1,4 +1,4 @@
-import { Required, RequiredBuffer, Validator } from '@/application/validation'
+import { AllowedMimeTypes, Extension, Required, RequiredBuffer, Validator } from '@/application/validation'
 
 export class ValidationBuilder {
   constructor (
@@ -19,6 +19,13 @@ export class ValidationBuilder {
       if (this.value.buffer !== undefined) {
         this.validators.push(new RequiredBuffer(this.value.buffer))
       }
+    }
+    return this
+  }
+
+  file ({ allowed }: { allowed: Extension[] }): ValidationBuilder {
+    if (this.value.mimeType !== undefined) {
+      this.validators.push(new AllowedMimeTypes(allowed, this.value.mimeType))
     }
     return this
   }

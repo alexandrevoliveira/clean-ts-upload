@@ -1,4 +1,4 @@
-import { Required, RequiredBuffer, ValidationBuilder } from '@/application/validation'
+import { AllowedMimeTypes, Required, RequiredBuffer, ValidationBuilder } from '@/application/validation'
 
 describe('ValidationBuilder', () => {
   it('should return Required', () => {
@@ -21,5 +21,14 @@ describe('ValidationBuilder', () => {
     const validators = ValidationBuilder.of({ value: { buffer } }).required().build()
 
     expect(validators).toEqual([new Required({ buffer }), new RequiredBuffer(buffer)])
+  })
+
+  it('should return AllowedMimeTypes', () => {
+    const validators = ValidationBuilder
+      .of({ value: { mimeType: 'application/gzip' } })
+      .file({ allowed: ['gz'] })
+      .build()
+
+    expect(validators).toEqual([new AllowedMimeTypes(['gz'], 'application/gzip')])
   })
 })

@@ -1,7 +1,11 @@
 import { Controller } from '@/application/controllers'
-import { Request, Response } from 'express'
 
-export const adaptExpressRoute = (controller: Controller) => async (req: Request, res: Response): Promise<void> => {
-  const httpResponse = await controller.handle({ ...req.body, ...req.locals })
-  res.status(200).json(httpResponse.data)
+import { RequestHandler } from 'express'
+
+type Adapter = (controller: Controller) => RequestHandler
+
+export const adaptExpressRoute: Adapter = controller => async (req, res) => {
+  const { data, statusCode } = await controller.handle({ ...req.body, ...req.locals })
+  const json = [200].includes(statusCode) ? data : { error: data.message }
+  res.status(statusCode).json(json)
 }

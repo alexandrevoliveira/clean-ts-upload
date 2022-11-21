@@ -6,7 +6,7 @@ jest.mock('@/application/validation/composite')
 
 class ControllerStub extends Controller {
   result: HttpResponse = {
-    statusCode: 400,
+    statusCode: 200,
     data: 'any_data'
   }
 
@@ -35,5 +35,11 @@ describe('Controller', () => {
       statusCode: 400,
       data: error
     })
+  })
+
+  it('should return same result as perform method', async () => {
+    const httpResponse = await sut.handle('any_value')
+
+    expect(httpResponse).toEqual(sut.result)
   })
 })

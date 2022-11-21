@@ -35,11 +35,11 @@ describe('RequiredBuffer', () => {
   })
 
   it('should return RequiredFieldError if value is empty', () => {
-    const sut = new RequiredBuffer(Buffer.from(''), 'any_field')
+    const sut = new RequiredBuffer(Buffer.from(''))
 
     const error = sut.validate()
 
-    expect(error).toEqual(new RequiredFieldError('any_field'))
+    expect(error).toEqual(new RequiredFieldError())
   })
 
   it('should return undefined if value is not empty', () => {

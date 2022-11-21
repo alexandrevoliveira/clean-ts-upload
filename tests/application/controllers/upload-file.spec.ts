@@ -13,7 +13,7 @@ describe('UploadFileController', () => {
     mimeType = 'application/gzip'
     fileName = 'any_file_name'
     file = { buffer, mimeType, fileName }
-    uploadLocalFile = jest.fn()
+    uploadLocalFile = jest.fn().mockResolvedValue({ fileName })
   })
 
   beforeEach(() => {
@@ -29,5 +29,14 @@ describe('UploadFileController', () => {
 
     expect(uploadLocalFile).toHaveBeenCalledWith({ file })
     expect(uploadLocalFile).toHaveBeenCalledTimes(1)
+  })
+
+  it('should return 200 if UploadLocalFile succeeds', async () => {
+    const httpResponse = await sut.handle({ file })
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: { fileName: 'any_file_name' }
+    })
   })
 })

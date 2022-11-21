@@ -1,4 +1,4 @@
-import { UploadFileController } from '@/application/controllers'
+import { Controller, UploadFileController } from '@/application/controllers'
 
 describe('UploadFileController', () => {
   let buffer: Buffer
@@ -18,6 +18,10 @@ describe('UploadFileController', () => {
 
   beforeEach(() => {
     sut = new UploadFileController(uploadLocalFile)
+  })
+
+  it('should extend Controller', () => {
+    expect(sut).toBeInstanceOf(Controller)
   })
 
   it('should call UploadLocalFile with correct input', async () => {

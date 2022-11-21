@@ -17,6 +17,10 @@ describe('adaptExpressRoute', () => {
     res = getMockRes().res
     next = getMockRes().next
     controller = mock()
+    controller.handle.mockResolvedValue({
+      statusCode: 200,
+      data: { data: 'any_data' }
+    })
   })
 
   beforeEach(() => {
@@ -37,5 +41,14 @@ describe('adaptExpressRoute', () => {
 
     expect(controller.handle).toHaveBeenCalledTimes(1)
     expect(controller.handle).toHaveBeenCalledWith({})
+  })
+
+  it('should return 200 and correct data', async () => {
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.json).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({ data: 'any_data' })
   })
 })

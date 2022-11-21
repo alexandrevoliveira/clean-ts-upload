@@ -29,4 +29,13 @@ describe('adaptExpressRoute', () => {
     expect(controller.handle).toHaveBeenCalledTimes(1)
     expect(controller.handle).toHaveBeenCalledWith({ anyBody: 'any_body', anyLocals: 'any_locals' })
   })
+
+  it('should call handle with empty request', async () => {
+    req = getMockReq()
+
+    await sut(req, res, next)
+
+    expect(controller.handle).toHaveBeenCalledTimes(1)
+    expect(controller.handle).toHaveBeenCalledWith({})
+  })
 })

@@ -51,4 +51,18 @@ describe('adaptExpressRoute', () => {
     expect(res.json).toHaveBeenCalledTimes(1)
     expect(res.json).toHaveBeenCalledWith({ data: 'any_data' })
   })
+
+  it('should return 400 and correct error', async () => {
+    controller.handle.mockResolvedValueOnce({
+      statusCode: 400,
+      data: new Error('any_bad_request_error')
+    })
+
+    await sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.status).toHaveBeenCalledWith(400)
+    expect(res.json).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({ error: 'any_bad_request_error' })
+  })
 })

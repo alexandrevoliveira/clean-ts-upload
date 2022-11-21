@@ -1,4 +1,5 @@
 import { Controller, UploadFileController } from '@/application/controllers'
+import { AllowedMimeTypes, Required, RequiredBuffer } from '@/application/validation'
 
 describe('UploadFileController', () => {
   let buffer: Buffer
@@ -22,6 +23,16 @@ describe('UploadFileController', () => {
 
   it('should extend Controller', () => {
     expect(sut).toBeInstanceOf(Controller)
+  })
+
+  it('should build validators correctly', () => {
+    const validators = sut.buildValidators({ file })
+
+    expect(validators).toEqual([
+      new Required(file, 'file'),
+      new RequiredBuffer(file.buffer, 'file'),
+      new AllowedMimeTypes(['gz'], mimeType)
+    ])
   })
 
   it('should call UploadLocalFile with correct input', async () => {

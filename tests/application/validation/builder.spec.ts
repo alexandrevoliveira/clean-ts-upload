@@ -18,9 +18,9 @@ describe('ValidationBuilder', () => {
   it('should return Required and RequiredBuffer', () => {
     const buffer = Buffer.from('any_buffer')
 
-    const validators = ValidationBuilder.of({ value: { buffer } }).required().build()
+    const validators = ValidationBuilder.of({ value: { buffer }, fieldName: 'any_field' }).required().build()
 
-    expect(validators).toEqual([new Required({ buffer }), new RequiredBuffer(buffer)])
+    expect(validators).toEqual([new Required({ buffer }, 'any_field'), new RequiredBuffer(buffer, 'any_field')])
   })
 
   it('should return AllowedMimeTypes', () => {

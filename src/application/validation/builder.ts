@@ -13,11 +13,11 @@ export class ValidationBuilder {
 
   required (): ValidationBuilder {
     if (this.value instanceof Buffer) {
-      this.validators.push(new RequiredBuffer(this.value))
+      this.validators.push(new RequiredBuffer(this.value, this.fieldName))
     } else {
       this.validators.push(new Required(this.value, this.fieldName))
       if (this.value.buffer !== undefined) {
-        this.validators.push(new RequiredBuffer(this.value.buffer))
+        this.validators.push(new RequiredBuffer(this.value.buffer, this.fieldName))
       }
     }
     return this

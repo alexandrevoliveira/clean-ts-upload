@@ -83,4 +83,11 @@ describe('adaptMulter', () => {
       }
     })
   })
+
+  it('should call next on success', async () => {
+    sut(req, res, next)
+
+    expect(next).toHaveBeenCalledTimes(1)
+    expect(next).toHaveBeenCalledWith()
+  })
 })

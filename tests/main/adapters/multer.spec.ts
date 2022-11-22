@@ -31,6 +31,7 @@ describe('adaptMulter', () => {
   })
 
   beforeEach(() => {
+    req = getMockReq({ locals: { anyLocals: 'any_locals' } })
     sut = adaptMulter
   })
 
@@ -57,5 +58,11 @@ describe('adaptMulter', () => {
     expect(res.status).toHaveBeenCalledWith(500)
     expect(res.json).toHaveBeenCalledTimes(1)
     expect(res.json).toHaveBeenCalledWith({ error: new ServerError(error).message })
+  })
+
+  it('should not add file to req.locals', async () => {
+    sut(req, res, next)
+
+    expect(req.locals).toEqual({ anyLocals: 'any_locals' })
   })
 })

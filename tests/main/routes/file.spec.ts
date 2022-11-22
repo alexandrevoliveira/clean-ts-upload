@@ -26,5 +26,14 @@ describe('File Routes', () => {
       expect(status).toBe(200)
       expect(body).toEqual({ fileName: 'any_name_20220215120015.gzip' })
     })
+
+    it('should return 400 if input is invalid', async () => {
+      const { status, body } = await request(app)
+        .post('/api/files/upload')
+        .attach('file', Buffer.from('any_buffer'), { filename: 'any_name', contentType: 'image/png' })
+
+      expect(status).toBe(400)
+      expect(body).toEqual({ error: 'Unsupported file. Allowed extensions: gz' })
+    })
   })
 })

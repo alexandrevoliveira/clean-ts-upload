@@ -1,3 +1,4 @@
+import { ServerError } from '@/application/errors'
 import { adaptMulter } from '@/main/adapters'
 
 import { NextFunction, Request, RequestHandler, Response } from 'express'
@@ -42,5 +43,19 @@ describe('adaptMulter', () => {
     expect(singleSpy).toHaveBeenCalledWith('file')
     expect(uploadSpy).toHaveBeenCalledTimes(1)
     expect(uploadSpy).toHaveBeenCalledWith(req, res, expect.any(Function))
+  })
+
+  it('should return 500 if upload fails', async () => {
+    const error = new Error('multer_error')
+    uploadSpy.mockImplementationOnce((req, res, next) => {
+      next(error)
+    })
+
+    sut(req, res, next)
+
+    expect(res.status).toHaveBeenCalledTimes(1)
+    expect(res.status).toHaveBeenCalledWith(500)
+    expect(res.json).toHaveBeenCalledTimes(1)
+    expect(res.json).toHaveBeenCalledWith({ error: new ServerError(error).message })
   })
 })

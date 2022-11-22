@@ -23,6 +23,7 @@ describe('adaptMulter', () => {
     next = getMockRes().next
     fakeMulter = multer as jest.Mocked<typeof multer>
     uploadSpy = jest.fn().mockImplementation((req, res, next) => {
+      req.file = { buffer: Buffer.from('any_buffer'), mimetype: 'any_type', originalname: 'any_name' }
       next()
     })
     singleSpy = jest.fn().mockImplementation(() => uploadSpy)
@@ -61,8 +62,25 @@ describe('adaptMulter', () => {
   })
 
   it('should not add file to req.locals', async () => {
+    uploadSpy.mockImplementationOnce((req, res, next) => {
+      next()
+    })
+
     sut(req, res, next)
 
     expect(req.locals).toEqual({ anyLocals: 'any_locals' })
+  })
+
+  it('should add file to req.locals', async () => {
+    sut(req, res, next)
+
+    expect(req.locals).toEqual({
+      anyLocals: 'any_locals',
+      file: {
+        buffer: Buffer.from('any_buffer'),
+        mimeType: req.file?.mimetype,
+        fileName: req.file?.originalname
+      }
+    })
   })
 })

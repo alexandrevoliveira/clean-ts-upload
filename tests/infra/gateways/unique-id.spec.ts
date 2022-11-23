@@ -17,6 +17,6 @@ describe('UniqueId', () => {
   it('should create a unique id', () => {
     const uuid = sut.uuid({ key: 'any_key' })
 
-    expect(uuid).toBe('any_key_20220215120015')
+    expect(uuid).toBe('20220215120015_any_key')
   })
 })

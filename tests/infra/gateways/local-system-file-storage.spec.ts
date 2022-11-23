@@ -1,7 +1,7 @@
 import { LocalSystemFileStorage } from '@/infra/gateways'
 
 import { exec } from 'child_process'
-import { readdirSync, unlinkSync } from 'fs'
+import { readdirSync } from 'fs'
 import { join } from 'path'
 import { promisify } from 'util'
 
@@ -13,9 +13,9 @@ describe('LocalSystemFileStorage', () => {
 
   beforeAll(async () => {
     const execAsync = promisify(exec)
-    await execAsync('mkdir -p $(pwd)/src/tmp')
-    await execAsync('node -e "process.stdout.write(crypto.randomBytes(1e7))" > $(pwd)/src/tmp/a.gz')
-    path = join(__dirname, '../../../src/tmp')
+    await execAsync('mkdir -p $(pwd)/tmp')
+    await execAsync('node -e "process.stdout.write(crypto.randomBytes(1e7))" > $(pwd)/tmp/a.gz')
+    path = join(__dirname, '../../../tmp')
     buffer = Buffer.from(`${path}/a.gz`)
     fileName = 'any_file_name.gz'
   })
@@ -24,11 +24,9 @@ describe('LocalSystemFileStorage', () => {
     sut = new LocalSystemFileStorage(path)
   })
 
-  afterAll(() => {
-    const dirFiles = readdirSync(path)
-    for (const dirFile of dirFiles) {
-      unlinkSync(`${path}/${dirFile}`)
-    }
+  afterAll(async () => {
+    const execAsync = promisify(exec)
+    await execAsync('rm -rf $(pwd)/tmp')
   })
 
   it('should upload file locally using stream method', async () => {

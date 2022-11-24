@@ -13,9 +13,9 @@ describe('LocalSystemFileStorage', () => {
 
   beforeAll(async () => {
     const execAsync = promisify(exec)
-    await execAsync('mkdir -p $(pwd)/tmp')
-    await execAsync('node -e "process.stdout.write(crypto.randomBytes(1e7))" > $(pwd)/tmp/a.gz')
-    path = join(__dirname, '../../../tmp')
+    await execAsync('mkdir -p $(pwd)/src/tmp')
+    await execAsync('node -e "process.stdout.write(crypto.randomBytes(1e7))" > $(pwd)/src/tmp/a.gz')
+    path = join(__dirname, '../../../src/tmp')
     buffer = Buffer.from(`${path}/a.gz`)
     fileName = 'any_file_name.gz'
   })
@@ -26,7 +26,7 @@ describe('LocalSystemFileStorage', () => {
 
   afterAll(async () => {
     const execAsync = promisify(exec)
-    await execAsync('rm -rf $(pwd)/tmp')
+    await execAsync('rm -rf $(pwd)/src/tmp')
   })
 
   it('should upload file locally using stream method', async () => {

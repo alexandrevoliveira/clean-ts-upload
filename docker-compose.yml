@@ -10,6 +10,7 @@ services:
       - HUSKY=0
     volumes:
       - ./dist/:/usr/src/clean-ts-upload/dist/
+      - ./tmp/:/usr/src/clean-ts-upload/tmp/
       - ./.env:/usr/src/clean-ts-upload/.env
       - ./package.json:/usr/src/clean-ts-upload/package.json
     ports:

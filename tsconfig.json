@@ -3,7 +3,7 @@
     "incremental": true,
     "outDir": "dist",
     "rootDirs": ["src", "tests"],
-    "target": "es2021",
+    "target": "ES6",
     "sourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,

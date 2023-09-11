@@ -1,7 +1,9 @@
 import { app } from '@/main/config/app'
+import { exec } from 'child_process'
 import { reset, set } from 'mockdate'
 
 import request from 'supertest'
+import { promisify } from 'util'
 
 describe('File Routes', () => {
   beforeAll(() => {
@@ -12,12 +14,12 @@ describe('File Routes', () => {
     reset()
   })
 
-  describe('POST /api/files/upload', () => {
-    const uploadSpy = jest.fn()
-    jest.mock('@/infra/gateways/local-system-file-storage', () => ({
-      LocalSystemFileStorage: jest.fn().mockImplementation(() => ({ upload: uploadSpy }))
-    }))
+  afterEach(async () => {
+    const execAsync = promisify(exec)
+    await execAsync('rm -rf tmp/*_any_name*')
+  })
 
+  describe('POST /api/files/upload', () => {
     it('should return 200 with valid data', async () => {
       const { status, body } = await request(app)
         .post('/api/files/upload')
@@ -30,7 +32,7 @@ describe('File Routes', () => {
     it('should return 400 if input is invalid', async () => {
       const { status, body } = await request(app)
         .post('/api/files/upload')
-        .attach('file', Buffer.from('any_buffer'), { filename: 'any_name', contentType: 'image/png' })
+        .attach('file', Buffer.from('any_buffer'), { filename: 'any_name.png', contentType: 'image/png' })
 
       expect(status).toBe(400)
       expect(body).toEqual({ error: 'Unsupported file. Allowed extensions: gz' })

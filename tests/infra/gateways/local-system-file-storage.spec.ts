@@ -1,39 +1,29 @@
 import { LocalSystemFileStorage } from '@/infra/gateways'
+import { WriteStream } from '@/infra/contracts/gateways'
 
-import { exec } from 'child_process'
-import { readdirSync } from 'fs'
-import { join } from 'path'
-import { promisify } from 'util'
+import { MockProxy, mock } from 'jest-mock-extended'
 
 describe('LocalSystemFileStorage', () => {
-  let sut: LocalSystemFileStorage
   let path: string
   let buffer: Buffer
   let fileName: string
+  let stream: MockProxy<WriteStream>
+  let sut: LocalSystemFileStorage
 
   beforeAll(async () => {
-    const execAsync = promisify(exec)
-    await execAsync('mkdir -p $(pwd)/src/tmp')
-    await execAsync('node -e "process.stdout.write(crypto.randomBytes(1e7))" > $(pwd)/src/tmp/a.gz')
-    path = join(__dirname, '../../../src/tmp')
-    buffer = Buffer.from(`${path}/a.gz`)
+    path = 'any_path'
+    buffer = Buffer.from('any_file_content')
     fileName = 'any_file_name.gz'
+    stream = mock()
   })
 
   beforeEach(() => {
-    sut = new LocalSystemFileStorage(path)
+    sut = new LocalSystemFileStorage(path, stream)
   })
 
-  afterAll(async () => {
-    const execAsync = promisify(exec)
-    await execAsync('rm -rf $(pwd)/src/tmp')
-  })
-
-  it('should upload file locally using stream method', async () => {
+  it('should call WriteStream with correct input', async () => {
     await sut.upload({ file: buffer, fileName })
 
-    const dir = readdirSync(path)
-
-    expect(dir.length).toBeGreaterThanOrEqual(2)
+    expect(stream.writeOn).toHaveBeenCalledWith({ item: buffer, itemPath: `${path}/${fileName}` })
   })
 })

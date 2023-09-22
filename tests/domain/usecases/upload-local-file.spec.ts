@@ -36,7 +36,7 @@ describe('UploadLocalFile', () => {
     expect(crypto.uuid).toHaveBeenCalledWith({ key: file.fileName })
   })
 
-  it('should rethrows if UUIDGenerator throws', async () => {
+  it('should rethrow if UUIDGenerator throws', async () => {
     crypto.uuid.mockImplementationOnce(() => { throw new Error('uuid_error') })
 
     const promise = sut({ file: { buffer, mimeType, fileName } })
@@ -50,7 +50,7 @@ describe('UploadLocalFile', () => {
     expect(fileStorage.upload).toHaveBeenCalledWith({ file: buffer, fileName: uuid })
   })
 
-  it('should throw UploadError when UploadFile returns any Error', async () => {
+  it('should rethrow UploadError when UploadFile returns any Error', async () => {
     fileStorage.upload.mockResolvedValueOnce(new Error('any_upload_error'))
 
     const promise = sut({ file: { buffer, mimeType, fileName } })

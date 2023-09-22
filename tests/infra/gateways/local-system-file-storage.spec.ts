@@ -26,4 +26,13 @@ describe('LocalSystemFileStorage', () => {
 
     expect(stream.writeOn).toHaveBeenCalledWith({ item: buffer, itemPath: `${path}/${fileName}` })
   })
+
+  it('should rethrow if WriteStream throws', async () => {
+    const error = new Error('any write stream error')
+    stream.writeOn.mockRejectedValueOnce(error)
+
+    const promise = sut.upload({ file: buffer, fileName })
+
+    await expect(promise).rejects.toThrow(error)
+  })
 })

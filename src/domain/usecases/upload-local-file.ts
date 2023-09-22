@@ -1,5 +1,5 @@
 import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
-import { UploadError } from '../entities/errors'
+import { UploadError } from '@/domain/entities/errors'
 
 type Setup = (fileStorage: UploadFile, crypto: UUIDGenerator) => UploadLocalFile
 type Input = { file: { buffer: Buffer, mimeType: string, fileName: string } }

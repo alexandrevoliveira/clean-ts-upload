@@ -1,4 +1,5 @@
 import { WriteStream } from '@/infra/contracts/gateways'
+
 import { createWriteStream } from 'fs'
 import { Readable, ReadableOptions, pipeline } from 'stream'
 import { promisify } from 'util'
@@ -6,7 +7,7 @@ import { promisify } from 'util'
 export class NodeStream implements WriteStream {
   async writeOn ({ item, itemPath }: WriteStream.Input): WriteStream.Output {
     const pipelineAsync = promisify(pipeline)
-    const readStream = MultiStream.readStream({ item })
+    const readStream = ReadStream.execute({ item })
     const writeStream = createWriteStream(itemPath)
     await pipelineAsync(
       readStream,
@@ -20,8 +21,8 @@ type ReadStreamInput = {
   options?: object
 }
 
-export class MultiStream extends Readable {
-  multiStreamOptions?: object
+export class ReadStream extends Readable {
+  readStreamOptions?: object
 
   private constructor (
     private item: any,
@@ -30,10 +31,10 @@ export class MultiStream extends Readable {
     super(options)
   }
 
-  static readStream ({ item, options }: ReadStreamInput): MultiStream {
-    const multiStreamOptions = item instanceof Buffer || typeof item === 'string' ? options : { objectMode: true }
-    const multiStream = new MultiStream(item, multiStreamOptions)
-    multiStream.multiStreamOptions = multiStreamOptions
+  static execute ({ item, options }: ReadStreamInput): ReadStream {
+    const readStreamOptions = item instanceof Buffer || typeof item === 'string' ? options : { objectMode: true }
+    const multiStream = new ReadStream(item, readStreamOptions)
+    multiStream.readStreamOptions = readStreamOptions
     return multiStream
   }
 

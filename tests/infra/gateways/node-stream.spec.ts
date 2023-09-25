@@ -14,6 +14,7 @@ describe('Streams', () => {
     let file: Buffer
     let pipelineAsyncSpy: jest.Mock
     let promisifySpy: jest.Mock
+    let readStreamSpy: jest.Mock
     let createWriteStreamSpy: jest.Mock
     let sut: NodeStream
 
@@ -23,6 +24,8 @@ describe('Streams', () => {
       pipelineAsyncSpy = jest.fn()
       promisifySpy = jest.fn().mockImplementation(() => pipelineAsyncSpy)
       jest.mocked(promisify).mockImplementation(promisifySpy)
+      readStreamSpy = jest.fn()
+      jest.spyOn(ReadStream, 'Readable').mockImplementationOnce(readStreamSpy)
       createWriteStreamSpy = jest.fn()
       jest.mocked(createWriteStream).mockImplementation(createWriteStreamSpy)
     })
@@ -32,9 +35,6 @@ describe('Streams', () => {
     })
 
     it('should write stream on right path', async () => {
-      const readStreamSpy = jest.fn()
-      jest.spyOn(ReadStream, 'Readable').mockImplementationOnce(readStreamSpy)
-
       await sut.writeOn({ item: file, itemPath })
 
       expect(promisifySpy).toHaveBeenCalledWith(pipeline)

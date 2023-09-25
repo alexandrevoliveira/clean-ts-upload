@@ -9,41 +9,6 @@ jest.mock('stream')
 jest.mock('util')
 
 describe('Streams', () => {
-  describe('NodeStream', () => {
-    let itemPath: string
-    let file: Buffer
-    let pipelineAsyncSpy: jest.Mock
-    let promisifySpy: jest.Mock
-    let readStreamSpy: jest.Mock
-    let createWriteStreamSpy: jest.Mock
-    let sut: NodeStream
-
-    beforeAll(async () => {
-      file = Buffer.from('any_file_content')
-      itemPath = 'tmp/any_file.csv'
-      pipelineAsyncSpy = jest.fn()
-      promisifySpy = jest.fn().mockImplementation(() => pipelineAsyncSpy)
-      jest.mocked(promisify).mockImplementation(promisifySpy)
-      readStreamSpy = jest.fn()
-      jest.spyOn(ReadStream, 'Readable').mockImplementationOnce(readStreamSpy)
-      createWriteStreamSpy = jest.fn()
-      jest.mocked(createWriteStream).mockImplementation(createWriteStreamSpy)
-    })
-
-    beforeEach(() => {
-      sut = new NodeStream()
-    })
-
-    it('should write stream on right path', async () => {
-      await sut.writeOn({ item: file, itemPath })
-
-      expect(promisifySpy).toHaveBeenCalledWith(pipeline)
-      expect(readStreamSpy).toHaveBeenCalled()
-      expect(createWriteStreamSpy).toHaveBeenCalledWith(itemPath)
-      expect(pipelineAsyncSpy).toHaveBeenCalled()
-    })
-  })
-
   describe('ReadStream', () => {
     it('should extend Readable', () => {
       const sut = ReadStream.execute({ item: Buffer.from('any_file_content') })
@@ -61,6 +26,45 @@ describe('Streams', () => {
       const sut = ReadStream.execute({ item: { anything: 'any_object' } })
 
       expect(sut.readStreamOptions).toEqual({ objectMode: true })
+    })
+  })
+
+  describe('NodeStream', () => {
+    let itemPath: string
+    let file: Buffer
+    let pipelineAsyncSpy: jest.Mock
+    let promisifySpy: jest.Mock
+    let readStreamSpy: jest.Mock
+    let readStreamResultSpy: jest.Mock
+    let createWriteStreamResultSpy: jest.Mock
+    let createWriteStreamSpy: jest.Mock
+    let sut: NodeStream
+
+    beforeAll(async () => {
+      file = Buffer.from('any_file_content')
+      itemPath = 'tmp/any_file.csv'
+      pipelineAsyncSpy = jest.fn()
+      promisifySpy = jest.fn().mockImplementation(() => pipelineAsyncSpy)
+      jest.mocked(promisify).mockImplementation(promisifySpy)
+      readStreamResultSpy = jest.fn()
+      readStreamSpy = jest.fn().mockReturnValue(readStreamResultSpy)
+      jest.spyOn(ReadStream, 'Readable').mockImplementation(readStreamSpy)
+      createWriteStreamResultSpy = jest.fn()
+      createWriteStreamSpy = jest.fn().mockReturnValue(createWriteStreamResultSpy)
+      jest.mocked(createWriteStream).mockImplementation(createWriteStreamSpy)
+    })
+
+    beforeEach(() => {
+      sut = new NodeStream()
+    })
+
+    it('should write stream on right path', async () => {
+      await sut.writeOn({ item: file, itemPath })
+
+      expect(promisifySpy).toHaveBeenCalledWith(pipeline)
+      expect(readStreamSpy).toHaveBeenCalled()
+      expect(createWriteStreamSpy).toHaveBeenCalledWith(itemPath)
+      expect(pipelineAsyncSpy).toHaveBeenCalledWith(readStreamResultSpy, createWriteStreamResultSpy)
     })
   })
 })

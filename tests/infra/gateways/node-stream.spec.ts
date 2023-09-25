@@ -1,7 +1,7 @@
 import { NodeStream, ReadStream } from '@/infra/gateways'
 
 import { createWriteStream } from 'fs'
-import { pipeline } from 'stream'
+import { Readable, pipeline } from 'stream'
 import { promisify } from 'util'
 
 jest.mock('fs')
@@ -45,18 +45,20 @@ describe('Streams', () => {
   })
 
   describe('ReadStream', () => {
-    it('should have undefined options if file is instanceof Buffer or typeof string', async () => {
-      const file = Buffer.from('any_file_content')
+    it('should extend Readable', () => {
+      const sut = ReadStream.execute({ item: Buffer.from('any_file_content') })
 
-      const sut = ReadStream.execute({ item: file })
+      expect(sut).toBeInstanceOf(Readable)
+    })
+
+    it('should have undefined options if file is instanceof Buffer or typeof string', async () => {
+      const sut = ReadStream.execute({ item: Buffer.from('any_file_content') })
 
       expect(sut.readStreamOptions).toBeUndefined()
     })
 
     it('should have options with objectMode equal to true if file is neither instanceof Buffer nor typeof string', async () => {
-      const file = { anything: 'any_object' }
-
-      const sut = ReadStream.execute({ item: file })
+      const sut = ReadStream.execute({ item: { anything: 'any_object' } })
 
       expect(sut.readStreamOptions).toEqual({ objectMode: true })
     })

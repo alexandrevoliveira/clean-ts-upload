@@ -48,7 +48,7 @@ describe('Streams', () => {
       jest.mocked(promisify).mockImplementation(promisifySpy)
       readStreamResultSpy = jest.fn()
       readStreamSpy = jest.fn().mockReturnValue(readStreamResultSpy)
-      jest.spyOn(ReadStream, 'Readable').mockImplementation(readStreamSpy)
+      jest.spyOn(ReadStream, 'execute').mockImplementation(readStreamSpy)
       createWriteStreamResultSpy = jest.fn()
       createWriteStreamSpy = jest.fn().mockReturnValue(createWriteStreamResultSpy)
       jest.mocked(createWriteStream).mockImplementation(createWriteStreamSpy)

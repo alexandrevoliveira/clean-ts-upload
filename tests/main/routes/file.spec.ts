@@ -1,7 +1,7 @@
 import { app } from '@/main/config/app'
+
 import { exec } from 'child_process'
 import { reset, set } from 'mockdate'
-
 import request from 'supertest'
 import { promisify } from 'util'
 

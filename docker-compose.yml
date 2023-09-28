@@ -2,7 +2,7 @@ version: '3.9'
 services:
   api:
     container_name: 'clean-ts-upload'
-    image: node:16
+    image: node:18
     working_dir: /usr/src/clean-ts-upload
     command: bash -c "npm install --omit=dev && npm run debug"
     restart: always

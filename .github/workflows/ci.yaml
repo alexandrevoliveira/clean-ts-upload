@@ -1,0 +1,49 @@
+name: clean-ts-upload
+on:
+  push:
+    branches:
+      - main
+      - '*/*'
+  pull_request:
+    branches:
+      - main
+      - '*/*'
+
+env:
+  SHA: $(git rev-parse --short=15 HEAD)_$(date -u +'%Y%m%dT%H%M%sZ')
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+
+      - name: Lint
+        run: npm run lint:fix
+
+      - name: Test
+        run: |-
+          make build IMAGE_FILE=Dockerfile.dev
+          docker run alexandrevoliveira/clean-ts-upload:local npm run test:coverage
+
+      - name: Build Images
+        run: |-
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          make build IMAGE_TAG=latest
+          make build IMAGE_TAG=${{ env.SHA }}
+
+      - name: Push Images
+        run:
+          docker push alexandrevoliveira/clean-ts-upload:latest
+          docker push alexandrevoliveira/clean-ts-upload:${{ env.SHA }}

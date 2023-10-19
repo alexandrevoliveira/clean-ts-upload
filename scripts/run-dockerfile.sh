@@ -23,7 +23,6 @@ main () {
     --detach \
     --publish "${HOST_PORT}":"${CONTAINER_PORT}" \
     --name "${CONTAINER_NAME}" \
-    --env CI=true \
     --env LOCAL_UPLOAD_PATH="${LOCAL_UPLOAD_PATH}" \
     --env PORT="${CONTAINER_PORT}" \
     "${image_tag_ref}"\n"
@@ -32,7 +31,6 @@ main () {
     --detach \
     --publish "${HOST_PORT}":"${CONTAINER_PORT}" \
     --name "${CONTAINER_NAME}" \
-    --env CI=true \
     --env LOCAL_UPLOAD_PATH="${LOCAL_UPLOAD_PATH}" \
     --env PORT="${CONTAINER_PORT}" \
     "${image_tag_ref}" \

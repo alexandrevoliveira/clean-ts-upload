@@ -10,7 +10,7 @@ on:
       - '*/*'
 
 env:
-  SHA: $(git rev-parse --short=15 HEAD)_$(date -u +'%Y%m%dT%H%M%sZ')
+  SHA: $(git rev-parse --short=15 HEAD)_$(date -u +'%Y%m%d')
 
 jobs:
   build:
@@ -47,6 +47,6 @@ jobs:
           make build IMAGE_TAG=${{ env.SHA }}
 
       - name: Push Images
-        run:
+        run: |-
           docker push alexandrevoliveira/clean-ts-upload:latest
           docker push alexandrevoliveira/clean-ts-upload:${{ env.SHA }}

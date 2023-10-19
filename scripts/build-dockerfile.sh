@@ -2,7 +2,7 @@
 set -o errexit
 
 readonly DIRECTORY="${DIRECTORY:-$(pwd)}"
-readonly IMAGE_FILE="${IMAGE_FILE:-Dockerfile.dev}"
+readonly IMAGE_FILE="${IMAGE_FILE:-Dockerfile}"
 readonly IMAGE_PREFIX="${IMAGE_PREFIX:-alexandrevoliveira}"
 readonly IMAGE_NAME="${IMAGE_NAME:-clean-ts-upload}"
 readonly IMAGE_TAG="${IMAGE_TAG:-local}"
